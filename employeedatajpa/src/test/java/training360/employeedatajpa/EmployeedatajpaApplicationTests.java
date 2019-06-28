@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -18,11 +19,15 @@ public class EmployeedatajpaApplicationTests {
 
 	@Test
 	void testSaveThenList() {
-		employeeRepository.saveAll(List.of(new Employee("John Doe"),
-				new Employee("Jack Doe")));
+
+		IntStream
+				.range(0, 100)
+				.mapToObj(i -> "John Doe " + i)
+				.map(Employee::new)
+				.forEach(e -> employeeRepository.save(e));
 
 		var employees = employeeRepository.findAll();
-		assertEquals(2, employees.size());
+		assertEquals(100, employees.size());
 	}
 
 }
