@@ -2,8 +2,12 @@ package employee;
 
 import org.junit.jupiter.api.*;
 
+import java.util.List;
 import java.util.stream.Stream;
 
+import static employee.EmployeeWithNameMatcher.employeeWithName;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
@@ -29,7 +33,24 @@ public class EmployeeTest {
 //        // Then
 //        assertEquals(49, age);
 
-        assertEquals(49, employee.getAge(2019), () -> "Ennek 49-nek kell lennie");
+        //assertEquals(49, employee.getAge(2019), () -> "Ennek 49-nek kell lennie");
+//        assertEquals(employee.getName(), "John");
+
+
+        assertThat(employee.getName(), startsWithIgnoringCase("john"));
+        assertThat(employee.getAge(2019), is(equalTo(49)));
+        assertEquals(1.0, 1.0, 0.005);
+
+        assertThat(employee, hasProperty("name", equalTo("John Doe")));
+
+        assertThat(employee, allOf(hasProperty("name", equalTo("John Doe")),
+                hasProperty("yearOfBirth", equalTo(1970))));
+
+        assertThat(List.of("John", "Jane", "Jack"), containsInAnyOrder("John", "Jane", "Jack"));
+
+        assertThat(List.of(employee), hasItem(hasProperty("name", startsWithIgnoringCase("john"))));
+
+        assertThat(employee, employeeWithName(startsWithIgnoringCase("john doe")));
     }
 
     @Test

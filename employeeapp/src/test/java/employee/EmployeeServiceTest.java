@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,6 +28,9 @@ public class EmployeeServiceTest {
         // Given
         when(repo.findEmployeeByName(anyString())).thenReturn(Optional.empty());
 
+//        when(repo.findEmployeeByName(anyString())).thenThrow(new IllegalStateException("Constraint violation"));
+
+
         // When
         var created = service.createEmployee("        Jack          ", 1970);
         assertTrue(created);
@@ -37,6 +41,11 @@ public class EmployeeServiceTest {
 
         assertEquals("Jack", employee.getValue().getName());
         assertEquals(1970, employee.getValue().getYearOfBirth());
+
+        verify(repo).saveEmployee(argThat(e -> e.getName().equals("Jack")));
+
+        final ArgumentCaptor<List<Employee>> listCaptor
+                = ArgumentCaptor.forClass((Class) List.class);
     }
 
     @Test
